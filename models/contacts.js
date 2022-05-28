@@ -22,17 +22,14 @@ const removeContact = async (contactId) => {
   const contactIndex = contacts.findIndex(
     (contact) => contact.id === contactId
   );
-
   const deletedContact = contacts[contactIndex];
   if(contactIndex !== -1) {
     contacts.splice(contactIndex, 1);
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
   }
-
   if(!deletedContact){
     return null;
   }
-
   return deletedContact;
 };
 
