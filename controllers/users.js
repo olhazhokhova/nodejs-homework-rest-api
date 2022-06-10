@@ -36,7 +36,8 @@ const login = async (req, res, next) => {
         if(!user || !user.comparePass(password)){
             throw new Unauthorized('Email or password is wrong');
         }
-        const token = jwt.sign({ id: user._id }, SECRET_KEY);
+        const token = jwt.sign({ id: user._id }, SECRET_KEY, {expiresIn: "1h"});
+        await User.findByIdAndUpdate(user._id, {token});
         res.json({
             status: "success",
             code: 200,
@@ -49,7 +50,24 @@ const login = async (req, res, next) => {
     }
 };
 
+const getCurrentUser = async (req, res) => {
+   res.json({
+    status: "success",
+    data: {
+        user: req.user
+    }
+   })
+};
+
+const logout = async (req, res) => {
+    const {_id} = req.user;
+    await User.findByIdAndUpdate(_id, {token: null});
+    res.status(204).json();
+ };
+
 module.exports = {
     register,
-    login
+    login,
+    getCurrentUser,
+    logout
 };
