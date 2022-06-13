@@ -8,12 +8,15 @@ const { DB_HOST, PORT = 3000 } = process.env;
 
 const app = express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
+
+const usersRouter = require('./routes/api/users')
 const contactsRouter = require('./routes/api/contacts')
 
 app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
 
+app.use('/api/users', usersRouter)
 app.use('/api/contacts', contactsRouter)
 
 mongoose.connect(DB_HOST)
