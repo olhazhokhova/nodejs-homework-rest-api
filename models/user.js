@@ -24,6 +24,14 @@ const userSchema = Schema({
     avatarURL: {
       type: String,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
 }, { versionKey: false, timestamps: true })
 
 userSchema.methods.comparePass = function(password){
@@ -42,10 +50,15 @@ const joiLoginSchema = Joi.object({
     email: Joi.string().required(),
 })
 
+const joiConfirmEmailSchema = Joi.object({
+  email: Joi.string().required(),
+})
+
 const User = model("user", userSchema);
 
 module.exports = {
     User,
     joiRegisterSchema,
-    joiLoginSchema
+    joiLoginSchema,
+    joiConfirmEmailSchema
 };
